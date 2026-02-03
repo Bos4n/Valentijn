@@ -1,71 +1,126 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-    <meta charset="UTF-8">
-    <title>Wil je mijn Valentijn zijn?</title>
-    <style>
-        body {
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: pink;
-            font-family: Arial, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentijn?</title>
 
-        .card {
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    background: pink;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-        button {
-            padding: 15px 30px;
-            font-size: 18px;
-            margin: 15px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-        }
+.card {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    z-index: 10;
+}
 
-        #yes {
-            background-color: #4CAF50;
-            color: white;
-        }
+button {
+    padding: 15px 25px;
+    font-size: 18px;
+    margin: 15px;
+    border: none;
+    border-radius: 12px;
+}
 
-        #no {
-            background-color: #f44336;
-            color: white;
-            position: absolute;
-        }
-    </style>
+#yes {
+    background: #4CAF50;
+    color: white;
+}
+
+#no {
+    background: #f44336;
+    color: white;
+    position: fixed;
+}
+
+/* ❤️ Hartjes */
+.heart {
+    position: fixed;
+    top: -20px;
+    font-size: 24px;
+    animation: fall linear forwards;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(110vh);
+        opacity: 0;
+    }
+}
+</style>
 </head>
+
 <body>
 
 <div class="card">
     <h1>Wil je mijn Valentijn zijn? ❤️</h1>
-    <button id="yes" onclick="goYes()">Ja</button>
+    <button id="yes">Ja</button>
     <button id="no">Nee</button>
 </div>
 
 <script>
-    const noBtn = document.getElementById("no");
+const noBtn = document.getElementById("no");
+const yesBtn = document.getElementById("yes");
 
-    noBtn.addEventListener("mouseover", () => {
-        const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-        const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+let speed = 300; // start snelheid (ms)
 
-        noBtn.style.left = x + "px";
-        noBtn.style.top = y + "px";
-    });
+function moveNoButton() {
+    const padding = 20;
+    const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+    const maxY = window.innerHeight - noBtn.offsetHeight - padding;
 
-    function goYes() {
-        window.location.href = "yes.html";
+    noBtn.style.left = Math.random() * maxX + "px";
+    noBtn.style.top = Math.random() * maxY + "px";
+
+    // 📳 vibratie (mobiel)
+    if (navigator.vibrate) {
+        navigator.vibrate(30);
     }
+
+    // 😈 steeds sneller
+    speed = Math.max(50, speed - 20);
+}
+
+// Desktop
+noBtn.addEventListener("mouseenter", moveNoButton);
+
+// Mobiel
+noBtn.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    moveNoButton();
+});
+
+// ❤️ Hartjes regen
+function createHeart() {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = "❤️";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = Math.random() * 3 + 3 + "s";
+    document.body.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 6000);
+}
+
+setInterval(createHeart, 300);
+
+// ➡️ JA
+yesBtn.addEventListener("click", () => {
+    window.location.href = "yes.html";
+});
 </script>
 
 </body>
 </html>
-
