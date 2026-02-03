@@ -10,7 +10,7 @@ body {
     margin: 0;
     overflow: hidden;
     background: pink;
-    color: white;
+    color: black;
     font-family: Arial, sans-serif;
     text-align: center;
 }
@@ -35,6 +35,14 @@ img {
     margin-top: 20px;
     width: 280px;
     border-radius: 20px;
+}
+
+/* 💌 Geheime boodschap */
+#secret {
+    opacity: 0;
+    font-size: 40px;
+    margin-top: 25px;
+    transition: opacity 2s ease;
 }
 
 /* ❤️ Hartjes confetti */
@@ -78,6 +86,8 @@ img {
 <div id="timer">⏳ Laden...</div>
 
 <img src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" alt="Dancing">
+
+<div id="secret">💌 Ik hou van je ❤️</div>
 
 <script>
 // ❤️ HARTJES CONFETTI
@@ -126,6 +136,11 @@ function updateTimer() {
 }
 setInterval(updateTimer, 1000);
 updateTimer();
+
+// 💌 Geheime liefdesboodschap na 10 sec
+setTimeout(() => {
+    document.getElementById("secret").style.opacity = 1;
+}, 10000);
 
 // 📳 Mobiele vibratie bij laden
 if (navigator.vibrate) {
