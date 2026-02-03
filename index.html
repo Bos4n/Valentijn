@@ -48,6 +48,7 @@ button {
     margin: 15px;
     border: none;
     border-radius: 12px;
+    cursor: pointer;
 }
 
 #yes {
@@ -59,6 +60,21 @@ button {
     background: #f44336;
     color: white;
     position: fixed;
+}
+
+/* ❤️ Vallende hartjes */
+.heart {
+    position: fixed;
+    top: -20px;
+    pointer-events: none;
+    animation: fall linear forwards;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(110vh);
+        opacity: 0;
+    }
 }
 </style>
 </head>
@@ -83,17 +99,35 @@ const questionScreen = document.getElementById("questionScreen");
 const noBtn = document.getElementById("no");
 const yesBtn = document.getElementById("yes");
 
-// 💌 Klik op brief → toon vraag
+let heartInterval;
+
+/* ❤️ Vallende hartjes */
+function startHearts() {
+    heartInterval = setInterval(() => {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.textContent = "❤️";
+
+        heart.style.left = Math.random() * window.innerWidth + "px";
+        heart.style.fontSize = (16 + Math.random() * 30) + "px";
+        heart.style.animationDuration = (3 + Math.random() * 3) + "s";
+
+        document.body.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 6000);
+    }, 300);
+}
+
+/* 💌 Klik op brief */
 letterScreen.addEventListener("click", () => {
     letterScreen.style.display = "none";
     questionScreen.style.display = "block";
+    startHearts();
 
-    if (navigator.vibrate) {
-        navigator.vibrate(50);
-    }
+    if (navigator.vibrate) navigator.vibrate(50);
 });
 
-// 😈 Nee knop ontsnapt
+/* 😈 Nee knop ontsnapt */
 function moveNo() {
     const padding = 20;
     const maxX = window.innerWidth - noBtn.offsetWidth - padding;
@@ -102,9 +136,7 @@ function moveNo() {
     noBtn.style.left = Math.random() * maxX + "px";
     noBtn.style.top = Math.random() * maxY + "px";
 
-    if (navigator.vibrate) {
-        navigator.vibrate(30);
-    }
+    if (navigator.vibrate) navigator.vibrate(30);
 }
 
 noBtn.addEventListener("mouseenter", moveNo);
@@ -113,10 +145,9 @@ noBtn.addEventListener("touchstart", (e) => {
     moveNo();
 });
 
-// ❤️ JA (later koppelen aan yes.html)
+/* ❤️ JA knop */
 yesBtn.addEventListener("click", () => {
-    window.location.href = "yes.html";
-    // window.location.href = "yes.html";
+    alert("💖 JAAAA! 💖");
 });
 </script>
 
