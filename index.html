@@ -35,14 +35,11 @@ body {
 }
 
 .card {
-    margin: 15px;
     background: white;
     padding: 30px;
     border-radius: 20px;
     text-align: center;
     box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    position: relative;
-    z-index: 1; /* kaart boven de vallende hartjes */
 }
 
 button {
@@ -63,43 +60,16 @@ button {
     color: white;
     position: fixed;
 }
-
-/* ➕ Hartjesregen */
-.heart {
-    position: fixed;
-    top: -40px;              /* start net boven beeld */
-    font-size: 16px;         /* basis, wordt per hartje gevarieerd */
-    pointer-events: none;    /* klik niet blokkeren */
-    animation-name: fall, sway;
-    animation-timing-function: linear, ease-in-out;
-    animation-iteration-count: 1, infinite;
-    opacity: 0.9;
-    will-change: transform, top, left;
-}
-
-/* vallen */
-@keyframes fall {
-    to {
-        transform: translateY(110vh) rotate(360deg);
-        opacity: 1;
-    }
-}
-
-/* zacht wiebelen links-rechts */
-@keyframes sway {
-    0%, 100% { transform: translateX(0); }
-    50% { transform: translateX(20px); }
-}
 </style>
 </head>
 
 <body>
 
 <!-- 💌 START: Brief -->
-<div id="letterScreen" aria-label="Open de brief">💌</div>
+<div id="letterScreen">💌</div>
 
 <!-- ❤️ VRAAG -->
-<div id="questionScreen" aria-live="polite">
+<div id="questionScreen">
     <div class="card">
         <h1>Wil je mijn Valentijn zijn? ❤️</h1>
         <button id="yes">Ja</button>
@@ -113,59 +83,7 @@ const questionScreen = document.getElementById("questionScreen");
 const noBtn = document.getElementById("no");
 const yesBtn = document.getElementById("yes");
 
-/* ➕ Hartjesregen configuratie */
-let heartIntervalId = null;
-const HEARTS_PER_SECOND = 12;     // pas dit aan voor meer/minder hartjes
-const HEART_EMOJIS = ["💗","💖","💘","💝","❤️","🩷","💕","💞"];
-
-/* ➕ Start hartjesregen */
-function startHeartRain() {
-    stopHeartRain(); // voor de zekerheid, nooit dubbel
-    heartIntervalId = setInterval(spawnHeart, 1000 / HEARTS_PER_SECOND);
-}
-
-/* ➕ Stop hartjesregen (optioneel te gebruiken) */
-function stopHeartRain() {
-    if (heartIntervalId) {
-        clearInterval(heartIntervalId);
-        heartIntervalId = null;
-    }
-}
-
-/* ➕ Maak één hartje */
-function spawnHeart() {
-    const heart = document.createElement("div");
-    heart.className = "heart";
-    heart.textContent = HEART_EMOJIS[Math.floor(Math.random() * HEART_EMOJIS.length)];
-
-    // willekeurige horizontale positie
-    const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-    const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
-
-    const x = Math.random() * (vw - 24); // marge
-    heart.style.left = `${x}px`;
-
-    // grootte en duur variëren
-    const size = 14 + Math.random() * 28; // 14–42px
-    heart.style.fontSize = `${size}px`;
-
-    // duur van vallen 4–9s, sway 2–4s
-    const fallDur = 4 + Math.random() * 5;
-    const swayDur = 2 + Math.random() * 2;
-
-    heart.style.animationDuration = `${fallDur}s, ${swayDur}s`;
-    heart.style.animationDelay = `0s, ${Math.random()}s`;
-    heart.style.filter = `hue-rotate(${Math.floor(Math.random()*15)-7}deg)`; // subtiele variatie
-
-    document.body.appendChild(heart);
-
-    // verwijderen na afloop om geheugen schoon te houden
-    setTimeout(() => {
-        heart.remove();
-    }, (fallDur + 0.2) * 1000);
-}
-
-/* 💌 Klik op brief → toon vraag + hartjesregen */
+// 💌 Klik op brief → toon vraag
 letterScreen.addEventListener("click", () => {
     letterScreen.style.display = "none";
     questionScreen.style.display = "block";
@@ -173,10 +91,9 @@ letterScreen.addEventListener("click", () => {
     if (navigator.vibrate) {
         navigator.vibrate(50);
     }
-    startHeartRain();
 });
 
-/* 😈 Nee knop ontsnapt */
+// 😈 Nee knop ontsnapt
 function moveNo() {
     const padding = 20;
     const maxX = window.innerWidth - noBtn.offsetWidth - padding;
@@ -196,18 +113,10 @@ noBtn.addEventListener("touchstart", (e) => {
     moveNo();
 });
 
-/* ❤️ JA → (optioneel) korte extra regen + door */
+// ❤️ JA (later koppelen aan yes.html)
 yesBtn.addEventListener("click", () => {
-    // korte boost met extra hartjes voor effect
-    const original = HEARTS_PER_SECOND;
-    const boostMs = 800;
-    stopHeartRain();
-    const boostId = setInterval(spawnHeart, 25); // snelle regen
-    setTimeout(() => {
-        clearInterval(boostId);
-        // eventueel stopHeartRain(); of juist doorlaten regenen
-        window.location.href = "yes.html";
-    }, boostMs);
+    window.location.href = "yes.html";
+    // window.location.href = "yes.html";
 });
 </script>
 
